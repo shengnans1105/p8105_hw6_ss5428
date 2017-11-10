@@ -1,7 +1,59 @@
 ---
-title: "shiny"
-author: "Shengnan Sun"
-date: "2017-11-9"
-output: html_document
+title: "Shiny Dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: row
+  runtime: shiny
 ---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+
+library(tidyverse)
+library(janitor)
+library(stringr)
+library(forcats)
+library(viridis)
+library(plotly)
+
+library(shiny)
+```
+
+```{r load_data}
+
+```
+
+Column {.sidebar}
+-----------------------------------------------------------------------
+
+```{r}
+
+```
+
+
+Row
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r}
+
+```
+
+Row {.tabset .tabset-fade}
+-----------------------------------------------------------------------
+
+### Chart B
+
+```{r}
+
+
+```
+
+### Chart C
+
+```{r}
+
+
+```
 
