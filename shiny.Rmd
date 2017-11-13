@@ -20,7 +20,10 @@ library(shiny)
 ```
 
 ```{r load_data}
-
+#read and clean the data
+nynoaadat <- read_csv("../data/nynoaadat.zip") %>%
+  clean_names() %>% 
+  separate(.,date, into = c("year", "month", "day"), sep = "-")
 ```
 
 Column {.sidebar}
