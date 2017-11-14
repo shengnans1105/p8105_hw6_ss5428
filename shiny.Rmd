@@ -21,9 +21,11 @@ library(shiny)
 
 ```{r load_data}
 #read and clean the data
-nynoaadat <- read_csv("./data/nynoaadat.csv.zip") %>%
+nynoaadat = read_csv("./data/nynoaadat.csv.zip") %>%
   clean_names() %>% 
-  separate(.,date, into = c("year", "month", "day"), sep = "-")
+  separate(.,date, into = c("year", "month", "day"), sep = "-") %>%
+  mutate(month = as.numeric(month),
+         year = as.numeric(year))
 ```
 
 Column {.sidebar}
@@ -31,32 +33,82 @@ Column {.sidebar}
 
 ```{r}
 
+station = nynoaadat %>% distinct(id) %>% pull()
+
+# selectInput widget
+selectInput("Station_choice", label = h3("Select ID"),
+            choices = station, selected = "USW00094794")
+
+max_year = max(nynoaadat$year)
+min_year = min(nynoaadat$year)
+
+# sliderInput widget
+sliderInput("year_range", label = h3("Choose year range"), min = min_year, 
+        max = max_year, value = c(min_year, max_year))
 ```
 
 
-Row
+Row {data-height=600}
 -----------------------------------------------------------------------
 
-### Chart A
+### Scatterplot of average max temperature against average min temperature
 
 ```{r}
-
+renderPlotly({
+  nynoaadat %>% 
+  filter(id == input$Station_choice, 
+         year %in% input$year_range[1]:input$year_range[2]) %>%
+  filter(is.na(tmax) == FALSE, is.na(tmin) == FALSE) %>% 
+  mutate(tmax = as.numeric(tmax)/10, tmin = as.numeric(tmin)/10) %>% 
+  group_by(year, month) %>% 
+  mutate(maximum_temperature = mean(tmax, na.rm = TRUE),
+            minimum_temperature = mean(tmin, na.rm = TRUE)) %>% 
+  mutate(month_str = month.name[month]) %>%
+  plot_ly(x = ~minimum_temperature, y =  ~maximum_temperature, type = "scatter", mode = "markers",
+          alpha = 0.5, 
+          color = ~month_str)
+  })
 ```
 
-Row {.tabset .tabset-fade}
+
+Column {data-width=350}
 -----------------------------------------------------------------------
 
-### Chart B
+### Boxplot of snowfall distribution of each month
 
 ```{r}
-
+renderPlotly({
+    nynoaadat %>%
+    filter(id == input$Station_choice, 
+           year %in% input$year_range[1]:input$year_range[2]) %>%
+    filter(snow > 0 & snow < 100) %>% 
+    group_by(month) %>% 
+    mutate(med_snow = median(snow, na.rm = TRUE)) %>% 
+    ungroup(month) %>% 
+    mutate(month_str = month.abb[month],
+         month_str = fct_reorder(month_str, med_snow)) %>% 
+    rename(snowfall = snow) %>% 
+    plot_ly(y = ~snowfall, color = ~month_str, type = "box",
+          colors = "Set2")
+})
 
 ```
 
-### Chart C
+
+### Barplot of average snowfall
 
 ```{r}
-
+renderPlotly({
+    nynoaadat %>%
+    filter(id == input$Station_choice, 
+           year %in% input$year_range[1]:input$year_range[2]) %>%
+    filter(snow > 0 & snow < 100) %>% filter(snow > 0 & snow < 100) %>% 
+    mutate(year = as.character(year)) %>%
+    group_by(year) %>% 
+    mutate(average_snallfall = round(mean(snow, na.rm = TRUE),3)) %>%
+    plot_ly(x = ~year, y = ~average_snallfall, type = "bar",
+           color = ~year)
+})
 
 ```
 
