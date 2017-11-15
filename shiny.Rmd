@@ -31,8 +31,10 @@ nynoaadat = read_csv("./data/nynoaadat.csv") %>%
 
 Column {.sidebar}
 -----------------------------------------------------------------------
+This `flexdashboard` with Shiny was made for [Jeff Goldsmith's Data Science I class, Homework 6](http://jeffgoldsmith.com/DSI/homework_6.html). The data come from [NOAA National Climatic Data Center](https://data.nodc.noaa.gov/cgi-bin/iso?id=gov.noaa.ncdc:C00861), which provides public access to weather data from some weather stations. 
 
 ```{r}
+#place code for widgets in the sidebar
 
 station = nynoaadat %>% distinct(id) %>% pull()
 
@@ -55,6 +57,7 @@ Row
 ### Scatterplot of average max temperature against average min temperature
 
 ```{r}
+#make interactive scatter plot
 renderPlotly({
   nynoaadat %>% 
   filter(id == input$Station_choice, 
@@ -82,6 +85,7 @@ Row {.tabset .tabset-fade}
 ### Boxplot of snowfall distribution of each month
 
 ```{r}
+#make interactive boxplot
 renderPlotly({
     nynoaadat %>%
     filter(id == input$Station_choice, 
@@ -103,6 +107,7 @@ renderPlotly({
 ### Barplot of average snowfall
 
 ```{r}
+#make interactive bar plot
 renderPlotly({
     nynoaadat %>%
     filter(id == input$Station_choice, 
