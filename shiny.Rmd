@@ -31,7 +31,6 @@ nynoaadat = read_csv("./data/nynoaadat.csv") %>%
 
 Column {.sidebar}
 -----------------------------------------------------------------------
-This `flexdashboard` with Shiny was made for [Jeff Goldsmith's Data Science I class, Homework 6](http://jeffgoldsmith.com/DSI/homework_6.html). The data come from [NOAA National Climatic Data Center](https://data.nodc.noaa.gov/cgi-bin/iso?id=gov.noaa.ncdc:C00861), which provides public access to weather data from some weather stations. 
 
 ```{r}
 #place code for widgets in the sidebar
@@ -49,6 +48,9 @@ min_year = min(nynoaadat$year)
 sliderInput("year_range", label = h3("Choose year range"), min = min_year, 
         max = max_year, value = c(min_year, max_year))
 ```
+
+
+This `flexdashboard` with Shiny was made for [Jeff Goldsmith's Data Science I class, Homework 6](http://jeffgoldsmith.com/DSI/homework_6.html). The data come from [NOAA National Climatic Data Center](https://data.nodc.noaa.gov/cgi-bin/iso?id=gov.noaa.ncdc:C00861), which provides public access to weather data from some weather stations. 
 
 
 Row 
@@ -122,7 +124,7 @@ renderPlotly({
            text = ~text_label,
            width = 1) %>%
     layout(yaxis = list(title = "Snowfall"),
-           xaxis = list(titile = "", tickangle = 90))
+           xaxis = list(title = "", tickangle = 90))
 })
 
 ```
