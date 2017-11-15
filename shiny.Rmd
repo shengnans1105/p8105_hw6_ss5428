@@ -19,9 +19,10 @@ library(plotly)
 library(shiny)
 ```
 
+
 ```{r load_data}
 #read and clean the data
-nynoaadat = read_csv("./data/nynoaadat.zip") %>%
+nynoaadat = read_csv("./data/nynoaadat.csv") %>%
   clean_names() %>% 
   separate(.,date, into = c("year", "month", "day"), sep = "-") %>%
   mutate(month = as.numeric(month),
