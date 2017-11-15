@@ -64,11 +64,10 @@ renderPlotly({
   nynoaadat %>% 
   filter(id == input$Station_choice, 
          year %in% input$year_range[1]:input$year_range[2]) %>%
-  filter(is.na(tmax) == FALSE, is.na(tmin) == FALSE) %>% 
   mutate(tmax = as.numeric(tmax)/10, tmin = as.numeric(tmin)/10) %>% 
   group_by(year, month) %>% 
-  mutate(maximum_temperature = mean(tmax, na.rm = TRUE),
-         minimum_temperature = mean(tmin, na.rm = TRUE)) %>% 
+  mutate(maximum_temperature = mean(tmax),
+         minimum_temperature = mean(tmin)) %>% 
   mutate(month_str = month.name[month],
          text_label = str_c("Year: ",year,'; Month: ', month_str)) %>%
   plot_ly(x = ~minimum_temperature, y =  ~maximum_temperature, type = "scatter", mode = "markers",
@@ -94,7 +93,7 @@ renderPlotly({
            year %in% input$year_range[1]:input$year_range[2]) %>%
     filter(snow > 0 & snow < 100) %>% 
     group_by(month) %>% 
-    mutate(med_snow = median(snow, na.rm = TRUE)) %>% 
+    mutate(med_snow = median(snow)) %>% 
     ungroup(month) %>% 
     mutate(month_str = month.abb[month],
          month_str = fct_reorder(month_str, med_snow)) %>% 
@@ -114,15 +113,14 @@ renderPlotly({
     nynoaadat %>%
     filter(id == input$Station_choice, 
            year %in% input$year_range[1]:input$year_range[2]) %>%
-    filter(snow > 0 & snow < 100) %>% filter(snow > 0 & snow < 100) %>% 
+    filter(snow > 0 & snow < 100) %>%
     mutate(year = as.factor(year)) %>%
     group_by(year) %>% 
-    mutate(average_snallfall = round(mean(snow, na.rm = TRUE),3), 
+    mutate(average_snallfall = round(mean(snow),3), 
            text_label = str_c("Year: ",year,'; Average Snowfall: ',average_snallfall)) %>%
     plot_ly(x = ~year, y = ~average_snallfall, type = "bar",
            color = ~year, 
-           text = ~text_label,
-           width = 1) %>%
+           text = ~text_label) %>%
     layout(yaxis = list(title = "Snowfall"),
            xaxis = list(title = "", tickangle = 90))
 })
